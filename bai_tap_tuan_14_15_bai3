@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int value;
+    Node* left;
+    Node* right;
+
+    Node(int v, Node* l = NULL, Node* r = NULL) {
+        value = v;
+        left = l;
+        right = r;
+    }
+};
+
+class BSTree {
+private:
+    Node* root;
+
+    void makeEmpty(Node*& t) {
+        if (!t) return;
+        makeEmpty(t->left);
+        makeEmpty(t->right);
+        delete t;
+        t = NULL;
+    }
+
+    void insert(int val, Node*& t) {
+        if (!t)
+            t = new Node(val);
+        else if (val < t->value)
+            insert(val, t->left);
+        else if (val > t->value)
+            insert(val, t->right);
+    }
+
+    Node* search(int val, Node* t) {
+        if (!t) return NULL;
+        if (val == t->value) return t;
+        if (val < t->value) return search(val, t->left);
+        return search(val, t->right);
+    }
+
+public:
+    BSTree() { root = NULL; }
+    ~BSTree() { makeEmpty(root); }
+
+    bool isEmpty() { return root == NULL; }
+    void makeEmpty() { makeEmpty(root); }
+
+    void insert(int val) { insert(val, root); }
+    Node* search(int val) { return search(val, root); }
+
+    Node* getRoot() { return root; }
+};
+
+// Duyệt cây nhị phân
+void PREORDER_travl(Node* t) {
+    if (!t) return;
+    cout << t->value << " ";
+    PREORDER_travl(t->left);
+    PREORDER_travl(t->right);
+}
+
+void INORDER_travl(Node* t) {
+    if (!t) return;
+    INORDER_travl(t->left);
+    cout << t->value << " ";
+    INORDER_travl(t->right);
+}
+
+void POSTORDER_travl(Node* t) {
+    if (!t) return;
+    POSTORDER_travl(t->left);
+    POSTORDER_travl(t->right);
+    cout << t->value << " ";
+}
+
+int main() {
+    BSTree bst;
+
+    bst.insert(5);
+    bst.insert(6);
+    bst.insert(3);
+    bst.insert(8);
+    bst.insert(7);
+    bst.insert(4);
+    bst.insert(2);
+
+    Node* root = bst.search(5);
+
+    cout << "Preorder: ";
+    PREORDER_travl(root);
+    cout << endl;
+
+    Node* n1 = bst.search(4);
+    Node* n2 = bst.search(9);
+
+    if (n1) cout << "Tim thay node 4\n";
+    if (!n2) cout << "Khong tim thay node 9\n";
+
+    bst.makeEmpty();
+    if (bst.isEmpty())
+        cout << "Cay da bi xoa rong\n";
+}

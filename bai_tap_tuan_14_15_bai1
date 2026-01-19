@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int val;
+    Node* left;
+    Node* right;
+    Node(int v) : val(v), left(NULL), right(NULL) {}
+};
+
+// Duyệt cây nhị phân
+void preorder(Node* root) {
+    if (!root) return;
+    cout << root->val << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    cout << root->val << " ";
+    inorder(root->right);
+}
+
+void postorder(Node* root) {
+    if (!root) return;
+    postorder(root->left);
+    postorder(root->right);
+    cout << root->val << " ";
+}
+
+// Vun đống cây nhị phân
+// Chuyển cây sang mảng, heapify, rồi gán lại 
+void treeToArray(Node* root, vector<Node*>& a) {
+    if (!root) return;
+    a.push_back(root);
+    treeToArray(root->left, a);
+    treeToArray(root->right, a);
+}
+
+void heapify(vector<Node*>& a) {
+    vector<int> vals;
+    for (auto x : a) vals.push_back(x->val);
+
+    make_heap(vals.begin(), vals.end()); // max heap
+
+    for (int i = 0; i < a.size(); i++)
+        a[i]->val = vals[i];
+}
+
+// Testing
+int main() {
+    Node* root = new Node(4);
+    root->left = new Node(1);
+    root->right = new Node(3);
+    root->left->left = new Node(2);
+    root->left->right = new Node(16);
+    root->right->left = new Node(9);
+    root->right->right = new Node(10);
+    root->left->left->left = new Node(14);
+    root->left->right->right = new Node(8);
+    root->right->left->left = new Node(7);
+
+    cout << "Preorder: "; preorder(root); cout << endl;
+    cout << "Inorder: "; inorder(root); cout << endl;
+    cout << "Postorder: "; postorder(root); cout << endl;
+
+    vector<Node*> a;
+    treeToArray(root, a);
+    heapify(a);
+
+    cout << "Sau khi vun dong (preorder): ";
+    preorder(root);
+}
